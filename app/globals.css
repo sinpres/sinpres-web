@@ -1,0 +1,79 @@
+@import "tailwindcss";
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
+@import "fumadocs-openapi/css/preset.css";
+@plugin "@tailwindcss/typography";
+
+body {
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* Force light on docs readme page */
+.docs-readme,
+.docs-readme * {
+  color-scheme: light;
+}
+
+.docs-readme pre {
+  background: #f6f8fa !important;
+  border: 1px solid #d1d9e0 !important;
+  color: #1f2328 !important;
+}
+
+.docs-readme pre code {
+  background: transparent !important;
+  color: #1f2328 !important;
+  padding: 0 !important;
+}
+
+.docs-readme code {
+  background: #f0f1f3 !important;
+  color: #1f2328 !important;
+}
+
+.docs-readme th,
+.docs-readme td {
+  border: 1px solid #d1d9e0 !important;
+  padding: 8px 12px !important;
+  color: #1f2328 !important;
+  background: #fff !important;
+}
+
+.docs-readme th {
+  background: #f6f8fa !important;
+}
+
+/* Ensure search dialog is above sticky header (z-40) */
+[data-radix-dialog-overlay],
+[data-radix-dialog-content],
+[role="dialog"],
+[data-state="open"] {
+  z-index: 50 !important;
+}
+
+/* Hide empty Fumadocs subnav header */
+#nd-subnav {
+  display: none !important;
+}
+
+/* Translate "On this page" to Portuguese */
+#toc-title {
+  font-size: 0 !important;
+}
+#toc-title::after {
+  content: 'Nesta página';
+  font-size: 0.875rem;
+}
+
+/* Hide sidebar collapse/open buttons */
+button[aria-label="Collapse Sidebar"],
+button[aria-label="Open Sidebar"] {
+  display: none !important;
+}
+
+.docs-readme h1[id],
+.docs-readme h2[id],
+.docs-readme h3[id],
+.docs-readme h4[id] {
+  scroll-margin-top: 6rem;
+}
