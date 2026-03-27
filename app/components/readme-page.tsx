@@ -5,7 +5,7 @@ import sanitizeHtml from 'sanitize-html'
 import { readFile } from 'fs/promises'
 import { resolve } from 'path'
 
-const GITHUB_README_URL = 'https://raw.githubusercontent.com/tree-ia/sinpres-api/main/README.md'
+const GITHUB_README_URL = 'https://raw.githubusercontent.com/sinpres/sinpres-api/main/README.md'
 const LOCAL_README_PATH = resolve(process.cwd(), '../sinpres-api/README.md')
 
 interface TocItem {
