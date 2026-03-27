@@ -63,10 +63,11 @@ export default function ExplorerPage() {
 
   return (
     <main className="flex-1 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-6 py-6">
-        <div className="mb-6">
-          <h1 className="text-2xl font-semibold text-gray-900">Consulta de Preços e Insumos</h1>
-          <p className="text-sm text-gray-500 mt-1">Base de dados pública do SINAPI — Construção Civil</p>
+      <div className="max-w-7xl mx-auto px-6 pb-6">
+        <div className="mb-6 text-center">
+          <img src="/sinpres-logo-horizontal.svg" alt="SINPRES" className="h-36 mx-auto mb-4" />
+          <h1 className="text-4xl font-semibold text-gray-900">Consulta de Preços e Insumos</h1>
+          <p className="text-lg text-gray-500 mt-2">Base de dados pública do SINAPI — Construção Civil</p>
         </div>
 
         <SearchBar
