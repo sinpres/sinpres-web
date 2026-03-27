@@ -87,7 +87,7 @@ export function Header() {
       <div className="px-4 sm:px-6 h-14 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center" onClick={() => setMenuOpen(false)}>
-            <img src="/sinpres-logo-horizontal-v2.svg" alt="SINPRES" className="h-7" />
+            <img src="/sinpres-logo-horizontal-v2.svg" alt="SINPRES" className="h-10" />
           </Link>
           {isDocs && <SearchButton />}
         </div>
