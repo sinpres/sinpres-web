@@ -49,7 +49,7 @@ export function ItemModal({ item, onClose }: ItemModalProps) {
         <div className="p-4 sm:p-6">
           {item.imageUrl ? (
             <img
-              src={`${API_URL}/${item.imageUrl}`}
+              src={item.imageUrl.startsWith('http') ? item.imageUrl : `${API_URL}/${item.imageUrl}`}
               alt={item.description}
               className="w-full max-h-72 object-contain bg-gray-50 rounded-lg border border-gray-200 mb-5"
               onError={(e) => {
