@@ -58,7 +58,7 @@ const NAV_LINKS = [
   { href: '/', label: 'Explorer', external: false },
   { href: '/docs', label: 'Docs', external: false },
   { href: 'https://github.com/sinpres/sinpres-api', label: 'GitHub', external: true },
-  { href: 'https://tree.ia.br', label: 'TREE.IA', external: true },
+  { href: 'https://tree.ia.br?utm_source=sinpres&utm_medium=web&utm_campaign=header', label: 'TREE.IA', external: true },
 ]
 
 export function Header() {
