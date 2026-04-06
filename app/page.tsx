@@ -15,9 +15,6 @@ export default function ExplorerPage() {
           <h1 className="text-4xl font-semibold text-gray-900">
             Consulta de Preços e Insumos do SINAPI
           </h1>
-          <p className="text-lg text-gray-500 mt-2">
-            Base de dados pública do SINAPI — Construção Civil
-          </p>
           <p className="text-sm text-gray-400 mt-4 max-w-2xl mx-auto leading-relaxed">
             O SINPRES (Sistema Nacional de Preços Setoriais) oferece acesso gratuito à base de dados
             do SINAPI, mantida pelo IBGE e pela Caixa Econômica Federal. Consulte preços de insumos,
