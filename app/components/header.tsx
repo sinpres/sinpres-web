@@ -88,14 +88,14 @@ export function Header() {
         <div className="flex items-center gap-4">
           {isDocs && (
             <Link href="/" className="flex items-center" onClick={() => setMenuOpen(false)}>
-              <img src="/sinpres-logo-horizontal.svg" alt="SINPRES" className="h-10" />
+              <img src="/sinpres-logo-horizontal.svg" alt="SINPRES — Sistema Nacional de Preços Setoriais" className="h-10" width={120} height={40} />
             </Link>
           )}
           {isDocs && <SearchButton />}
         </div>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-5 text-sm">
+        <nav aria-label="Navegação principal" className="hidden md:flex items-center gap-5 text-sm">
           {NAV_LINKS.map(({ href, label, external }) =>
             external ? (
               <a
@@ -130,7 +130,7 @@ export function Header() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <nav className="md:hidden border-t border-gray-100 px-4 py-3 space-y-1 bg-white">
+        <nav aria-label="Menu mobile" className="md:hidden border-t border-gray-100 px-4 py-3 space-y-1 bg-white">
           {NAV_LINKS.map(({ href, label, external }) =>
             external ? (
               <a
