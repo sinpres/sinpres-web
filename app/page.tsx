@@ -1,100 +1,32 @@
-'use client'
-
-import { useState, useEffect, useCallback } from 'react'
-import { SearchBar } from '@/app/components/explorer/search-bar'
-import { ItemsTable } from '@/app/components/explorer/items-table'
-import { Pagination } from '@/app/components/explorer/pagination'
-import { ItemModal } from '@/app/components/explorer/item-modal'
-import { getItems, type Item, type PaginationMeta } from '@/app/lib/api'
+import { Explorer } from '@/app/components/explorer/explorer'
 
 export default function ExplorerPage() {
-  const [query, setQuery] = useState('')
-  const [unit, setUnit] = useState('')
-  const [limit, setLimit] = useState(50)
-  const [page, setPage] = useState(1)
-  const [items, setItems] = useState<Item[]>([])
-  const [meta, setMeta] = useState<PaginationMeta | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [selectedItem, setSelectedItem] = useState<Item | null>(null)
-
-  const fetchData = useCallback(async () => {
-    setLoading(true)
-    try {
-      const res = await getItems('civil-construction', {
-        search: query || undefined,
-        unit: unit || undefined,
-        page,
-        limit,
-      })
-      setItems(res.data)
-      setMeta(res.meta)
-    } catch {
-      setItems([])
-      setMeta(null)
-    } finally {
-      setLoading(false)
-    }
-  }, [query, unit, page, limit])
-
-  useEffect(() => {
-    const timer = setTimeout(fetchData, 300)
-    return () => clearTimeout(timer)
-  }, [fetchData])
-
-  function handleQueryChange(q: string) {
-    setQuery(q)
-    setPage(1)
-  }
-
-  function handleUnitChange(u: string) {
-    setUnit(u)
-    setPage(1)
-  }
-
-  function handleLimitChange(l: number) {
-    setLimit(l)
-    setPage(1)
-  }
-
-  function handlePageChange(p: number) {
-    setPage(p)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
   return (
     <main className="flex-1 bg-gray-50">
       <div className="max-w-7xl mx-auto px-6 pb-6">
-        <div className="mb-6 text-center">
-          <img src="/sinpres-logo-horizontal.svg" alt="SINPRES" className="h-36 mx-auto mb-4" />
-          <h1 className="text-4xl font-semibold text-gray-900">Consulta de Preços e Insumos</h1>
-          <p className="text-lg text-gray-500 mt-2">Base de dados pública do SINAPI — Construção Civil</p>
-        </div>
-
-        <SearchBar
-          query={query}
-          unit={unit}
-          limit={limit}
-          onQueryChange={handleQueryChange}
-          onUnitChange={handleUnitChange}
-          onLimitChange={handleLimitChange}
-        />
-
-        <ItemsTable
-          items={items}
-          loading={loading}
-          onItemClick={setSelectedItem}
-        />
-
-        {meta && (
-          <p className="text-sm text-gray-500 mt-4 text-center">
-            <strong className="text-gray-900">{meta.total.toLocaleString('pt-BR')}</strong> itens encontrados
-            {' \u2014 '}Página <strong className="text-gray-900">{meta.page}</strong> de <strong className="text-gray-900">{meta.totalPages}</strong>
+        <section aria-label="Apresentação do SINPRES" className="mb-6 text-center">
+          <img
+            src="/sinpres-logo-horizontal.svg"
+            alt="SINPRES — Sistema Nacional de Preços Setoriais"
+            className="h-36 mx-auto mb-4"
+            width={400}
+            height={144}
+          />
+          <h1 className="text-4xl font-semibold text-gray-900">
+            Consulta de Preços e Insumos do SINAPI
+          </h1>
+          <p className="text-lg text-gray-500 mt-2">
+            Base de dados pública do SINAPI — Construção Civil
           </p>
-        )}
+          <p className="text-sm text-gray-400 mt-4 max-w-2xl mx-auto leading-relaxed">
+            O SINPRES (Sistema Nacional de Preços Setoriais) oferece acesso gratuito à base de dados
+            do SINAPI, mantida pelo IBGE e pela Caixa Econômica Federal. Consulte preços de insumos,
+            composições e serviços da construção civil brasileira. Ideal para engenheiros, arquitetos,
+            orçamentistas e empresas de construção que precisam de referências de preços atualizadas.
+          </p>
+        </section>
 
-        <Pagination meta={meta} onPageChange={handlePageChange} />
-
-        <ItemModal item={selectedItem} onClose={() => setSelectedItem(null)} />
+        <Explorer />
       </div>
     </main>
   )
