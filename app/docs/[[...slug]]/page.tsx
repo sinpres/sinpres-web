@@ -44,6 +44,8 @@ export async function generateStaticParams() {
   return [{ slug: [] }, ...source.generateParams()]
 }
 
+const siteUrl = 'https://sinpres.com.br'
+
 export async function generateMetadata(
   props: { params: Promise<{ slug?: string[] }> },
 ): Promise<Metadata> {
@@ -51,15 +53,35 @@ export async function generateMetadata(
 
   if (!params.slug || params.slug.length === 0) {
     return {
-      title: 'SINPRES — Documentação',
-      description: 'Documentação da API SINPRES',
+      title: 'Documentação da API',
+      description:
+        'Documentação completa da API SINPRES. Endpoints, exemplos de uso e referência técnica para consulta de preços e insumos do SINAPI.',
+      alternates: {
+        canonical: `${siteUrl}/docs`,
+      },
+      openGraph: {
+        title: 'SINPRES — Documentação da API',
+        description: 'Referência técnica completa da API pública SINPRES para consulta de preços do SINAPI.',
+        url: `${siteUrl}/docs`,
+      },
     }
   }
 
   const page = source.getPage(params.slug)
   if (!page) notFound()
+
+  const pageUrl = `${siteUrl}/docs/${params.slug.join('/')}`
+
   return {
     title: page.data.title,
     description: page.data.description,
+    alternates: {
+      canonical: pageUrl,
+    },
+    openGraph: {
+      title: `${page.data.title} | SINPRES Docs`,
+      description: page.data.description,
+      url: pageUrl,
+    },
   }
 }
