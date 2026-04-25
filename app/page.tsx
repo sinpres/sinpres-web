@@ -13,13 +13,14 @@ export default function ExplorerPage() {
             height={144}
           />
           <h1 className="text-4xl font-semibold text-gray-900">
-            Consulta de Preços e Insumos do SINAPI
+            Consulta de Insumos e Composições do SINAPI
           </h1>
           <p className="text-sm text-gray-400 mt-4 max-w-2xl mx-auto leading-relaxed">
             O SINPRES (Sistema Nacional de Preços Setoriais) oferece acesso gratuito à base de dados
-            do SINAPI, mantida pelo IBGE e pela Caixa Econômica Federal. Consulte preços de insumos,
-            composições e serviços da construção civil brasileira. Ideal para engenheiros, arquitetos,
-            orçamentistas e empresas de construção que precisam de referências de preços atualizadas.
+            do SINAPI, mantida pelo IBGE e pela Caixa Econômica Federal. Consulte insumos, composições
+            e preços de referência da construção civil brasileira por estado e mês. Ideal para
+            engenheiros, arquitetos, orçamentistas e empresas de construção que precisam de
+            referências atualizadas.
           </p>
         </section>
 

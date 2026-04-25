@@ -1,45 +1,69 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { SearchBar } from '@/app/components/explorer/search-bar'
-import { ItemsTable } from '@/app/components/explorer/items-table'
+import { SearchBar, type Mode } from '@/app/components/explorer/search-bar'
+import { ResultsTable } from '@/app/components/explorer/results-table'
 import { Pagination } from '@/app/components/explorer/pagination'
 import { ItemModal } from '@/app/components/explorer/item-modal'
-import { getItems, type Item, type PaginationMeta } from '@/app/lib/api'
+import { CompositionModal } from '@/app/components/explorer/composition-modal'
+import {
+  getItems,
+  getCompositions,
+  type Item,
+  type Composition,
+  type PaginationMeta,
+} from '@/app/lib/api'
 
 export function Explorer() {
+  const [mode, setMode] = useState<Mode>('items')
   const [query, setQuery] = useState('')
   const [unit, setUnit] = useState('')
+  const [state, setState] = useState('') // '' = Nacional
   const [limit, setLimit] = useState(50)
   const [page, setPage] = useState(1)
-  const [items, setItems] = useState<Item[]>([])
+  const [rows, setRows] = useState<(Item | Composition)[]>([])
   const [meta, setMeta] = useState<PaginationMeta | null>(null)
   const [loading, setLoading] = useState(true)
   const [selectedItem, setSelectedItem] = useState<Item | null>(null)
+  const [selectedComposition, setSelectedComposition] = useState<Composition | null>(null)
 
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
-      const res = await getItems('civil-construction', {
+      const params = {
         search: query || undefined,
         unit: unit || undefined,
+        state: state || undefined,
         page,
         limit,
-      })
-      setItems(res.data)
-      setMeta(res.meta)
+      }
+      if (mode === 'items') {
+        const res = await getItems('civil-construction', params)
+        setRows(res.data)
+        setMeta(res.meta)
+      } else {
+        const res = await getCompositions('civil-construction', params)
+        setRows(res.data)
+        setMeta(res.meta)
+      }
     } catch {
-      setItems([])
+      setRows([])
       setMeta(null)
     } finally {
       setLoading(false)
     }
-  }, [query, unit, page, limit])
+  }, [mode, query, unit, state, page, limit])
 
   useEffect(() => {
     const timer = setTimeout(fetchData, 300)
     return () => clearTimeout(timer)
   }, [fetchData])
+
+  function handleModeChange(m: Mode) {
+    setMode(m)
+    setPage(1)
+    setUnit('') // unit lists differ between items/compositions
+  }
 
   function handleQueryChange(q: string) {
     setQuery(q)
@@ -48,6 +72,11 @@ export function Explorer() {
 
   function handleUnitChange(u: string) {
     setUnit(u)
+    setPage(1)
+  }
+
+  function handleStateChange(s: string) {
+    setState(s)
     setPage(1)
   }
 
@@ -61,33 +90,58 @@ export function Explorer() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  function handleRowClick(row: Item | Composition) {
+    if (mode === 'items') setSelectedItem(row as Item)
+    else setSelectedComposition(row as Composition)
+  }
+
+  const showPriceColumn = !!state // só mostra preço quando UF selecionada
+
+  const totalLabel = mode === 'items' ? 'insumos encontrados' : 'composições encontradas'
+
   return (
     <>
       <SearchBar
+        mode={mode}
         query={query}
         unit={unit}
+        state={state}
         limit={limit}
+        onModeChange={handleModeChange}
         onQueryChange={handleQueryChange}
         onUnitChange={handleUnitChange}
+        onStateChange={handleStateChange}
         onLimitChange={handleLimitChange}
       />
 
-      <ItemsTable
-        items={items}
+      <ResultsTable
+        mode={mode}
+        rows={rows}
         loading={loading}
-        onItemClick={setSelectedItem}
+        showPriceColumn={showPriceColumn}
+        onRowClick={handleRowClick}
       />
 
       {meta && (
         <p className="text-sm text-gray-500 mt-4 text-center">
-          <strong className="text-gray-900">{meta.total.toLocaleString('pt-BR')}</strong> itens encontrados
-          {' \u2014 '}Página <strong className="text-gray-900">{meta.page}</strong> de <strong className="text-gray-900">{meta.totalPages}</strong>
+          <strong className="text-gray-900">{meta.total.toLocaleString('pt-BR')}</strong> {totalLabel}
+          {' — '}Página <strong className="text-gray-900">{meta.page}</strong> de <strong className="text-gray-900">{meta.totalPages}</strong>
+          {!state && (
+            <span className="block text-xs text-gray-400 mt-1">
+              Selecione uma UF para ver preços
+            </span>
+          )}
         </p>
       )}
 
       <Pagination meta={meta} onPageChange={handlePageChange} />
 
       <ItemModal item={selectedItem} onClose={() => setSelectedItem(null)} />
+      <CompositionModal
+        composition={selectedComposition}
+        state={state}
+        onClose={() => setSelectedComposition(null)}
+      />
     </>
   )
 }
