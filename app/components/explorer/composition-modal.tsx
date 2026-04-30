@@ -14,12 +14,23 @@ interface CompositionModalProps {
   onClose: () => void
 }
 
+interface DetailState {
+  key: string
+  detail: CompositionDetail | null
+  loading: boolean
+}
+
 export function CompositionModal({ composition, state, onClose }: CompositionModalProps) {
-  const [detail, setDetail] = useState<CompositionDetail | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [detailState, setDetailState] = useState<DetailState | null>(null)
+  const detailKey = composition ? `${composition.code}:${state}` : null
+  const detail = detailKey && detailState?.key === detailKey ? detailState.detail : null
+  const loading = !!composition && (detailState?.key !== detailKey || detailState.loading)
 
   useEffect(() => {
     if (!composition) return
+
+    let ignore = false
+    const key = `${composition.code}:${state}`
 
     document.body.style.overflow = 'hidden'
 
@@ -28,14 +39,16 @@ export function CompositionModal({ composition, state, onClose }: CompositionMod
     }
     document.addEventListener('keydown', handleEscape)
 
-    setDetail(null)
-    setLoading(true)
     getCompositionByCode('civil-construction', composition.code, state ? { state } : {})
-      .then((res) => setDetail(res.data))
-      .catch(() => setDetail(null))
-      .finally(() => setLoading(false))
+      .then((res) => {
+        if (!ignore) setDetailState({ key, detail: res.data, loading: false })
+      })
+      .catch(() => {
+        if (!ignore) setDetailState({ key, detail: null, loading: false })
+      })
 
     return () => {
+      ignore = true
       document.body.style.overflow = ''
       document.removeEventListener('keydown', handleEscape)
     }

@@ -27,42 +27,57 @@ export function Explorer() {
   const [selectedItem, setSelectedItem] = useState<Item | null>(null)
   const [selectedComposition, setSelectedComposition] = useState<Composition | null>(null)
 
-  const fetchData = useCallback(async () => {
-    setLoading(true)
-    try {
-      const params = {
-        search: query || undefined,
-        unit: unit || undefined,
-        state: state || undefined,
-        page,
-        limit,
-      }
-      if (mode === 'items') {
-        const res = await getItems('civil-construction', params)
+  const closeItemModal = useCallback(() => setSelectedItem(null), [])
+  const closeCompositionModal = useCallback(() => setSelectedComposition(null), [])
+
+  useEffect(() => {
+    let ignore = false
+
+    const timer = setTimeout(async () => {
+      setLoading(true)
+      try {
+        const params = {
+          search: query || undefined,
+          unit: unit || undefined,
+          state: state || undefined,
+          page,
+          limit,
+        }
+        const res = mode === 'items'
+          ? await getItems('civil-construction', params)
+          : await getCompositions('civil-construction', params)
+
+        if (ignore) return
+
         setRows(res.data)
         setMeta(res.meta)
-      } else {
-        const res = await getCompositions('civil-construction', params)
-        setRows(res.data)
-        setMeta(res.meta)
+      } catch {
+        if (ignore) return
+
+        setRows([])
+        setMeta(null)
+      } finally {
+        if (!ignore) setLoading(false)
       }
-    } catch {
-      setRows([])
-      setMeta(null)
-    } finally {
-      setLoading(false)
+    }, 300)
+
+    return () => {
+      ignore = true
+      clearTimeout(timer)
     }
   }, [mode, query, unit, state, page, limit])
 
-  useEffect(() => {
-    const timer = setTimeout(fetchData, 300)
-    return () => clearTimeout(timer)
-  }, [fetchData])
-
   function handleModeChange(m: Mode) {
+    if (m === mode) return
+
     setMode(m)
     setPage(1)
     setUnit('') // unit lists differ between items/compositions
+    setRows([])
+    setMeta(null)
+    setLoading(true)
+    setSelectedItem(null)
+    setSelectedComposition(null)
   }
 
   function handleQueryChange(q: string) {
@@ -136,11 +151,11 @@ export function Explorer() {
 
       <Pagination meta={meta} onPageChange={handlePageChange} />
 
-      <ItemModal item={selectedItem} onClose={() => setSelectedItem(null)} />
+      <ItemModal item={selectedItem} onClose={closeItemModal} />
       <CompositionModal
         composition={selectedComposition}
         state={state}
-        onClose={() => setSelectedComposition(null)}
+        onClose={closeCompositionModal}
       />
     </>
   )

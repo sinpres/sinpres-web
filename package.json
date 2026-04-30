@@ -10,27 +10,27 @@
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.19",
-    "fumadocs-core": "^16.7.6",
-    "fumadocs-openapi": "^10.5.0",
-    "fumadocs-ui": "^16.7.6",
-    "next": "16.2.1",
+    "fumadocs-core": "^16.8.5",
+    "fumadocs-openapi": "^10.8.1",
+    "fumadocs-ui": "^16.8.5",
+    "next": "16.2.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.1",
     "remark-html": "^16.0.1",
-    "sanitize-html": "^2.17.2"
+    "sanitize-html": "^2.17.3"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@tailwindcss/postcss": "^4.2.4",
+    "@types/node": "^20.19.39",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "@types/sanitize-html": "^2.16.1",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.1",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "eslint": "^9.39.4",
+    "eslint-config-next": "16.2.4",
+    "tailwindcss": "^4.2.4",
+    "typescript": "^5.9.3"
   },
   "ignoreScripts": [
     "sharp",
@@ -39,5 +39,9 @@
   "trustedDependencies": [
     "sharp",
     "unrs-resolver"
-  ]
+  ],
+  "overrides": {
+    "brace-expansion": "1.1.13",
+    "postcss": "8.5.10"
+  }
 }
